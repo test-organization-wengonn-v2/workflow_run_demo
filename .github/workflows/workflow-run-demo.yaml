@@ -7,6 +7,9 @@ on:
     types:
       - completed
 
+env: 
+    DEMO_SECRET: ${{ secrets.DEMO_SECRET }}
+
 
 jobs:
   demo-workflow-run:
