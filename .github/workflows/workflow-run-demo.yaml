@@ -1,0 +1,35 @@
+name: Comment on the pull request
+
+on:
+  workflow_run:
+    workflows: 
+        - "Demo Pull Request"
+    types:
+      - completed
+
+
+jobs:
+  demo-workflow-run:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifact
+      id: download-artifact
+      uses: actions/download-artifact@v4
+      with:
+          run-id: ${{ github.event.workflow_run.id }}
+          name: 'pr-${{ github.event.workflow_run.id }}'
+          path: pr
+          github-token: ${{ secrets.GITHUB_TOKEN }} 
+    
+    - name: Fetch Artifact Information 
+      id: artifact_info
+      run: |
+          echo "event_number=$(cat ./pr/NR)" >> $GITHUB_OUTPUT
+
+    - name: Perform Some Action 
+      uses: actions/github-script@v6
+      with:
+        script: |
+            console.log("${{ steps.artifact_info.outputs.event_number }}")
+        
+    
